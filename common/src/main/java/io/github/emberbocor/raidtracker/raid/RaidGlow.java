@@ -43,8 +43,7 @@ public final class RaidGlow {
         if (isOwn(glowing)) {
             return glowing.endsWithin(REFRESH_AT);
         }
-        // Glowing from another source (a bell, a spectral arrow, a command) is left alone. Taking it over on its
-        // last tick only avoids a one-tick gap: it is removed later this tick anyway.
+        // Another source's glowing is left alone; taking it over on its last tick avoids a one-tick gap.
         return glowing.endsWithin(1);
     }
 

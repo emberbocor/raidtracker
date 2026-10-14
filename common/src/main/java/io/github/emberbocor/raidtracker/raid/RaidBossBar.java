@@ -10,7 +10,6 @@ public final class RaidBossBar {
     private RaidBossBar() {
     }
 
-    // null: the vanilla name applies
     @Nullable
     public static Component name(Raid raid, int normalWaves) {
         if (!raid.hasFirstWaveSpawned() || raid.isOver() || raid.isStopped()) {

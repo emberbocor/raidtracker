@@ -9,8 +9,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 
-// Everyone who has been part of the current wave, dead or alive. Saved with the raid; vanilla ignores the extra keys,
-// so a world saved with the mod still loads without it.
 public final class RaidWave {
     private static final String WAVE = "raidtracker:Wave";
     private static final String MEMBERS = "raidtracker:WaveMembers";

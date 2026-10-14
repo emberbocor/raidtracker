@@ -57,7 +57,6 @@ public abstract class RaidMixin {
         raidtracker$updateName();
     }
 
-    // Every raider of a wave passes through here: spawned ones, riders, recruits and raiders that rejoin after loading.
     @Inject(method = "addWaveMob(ILnet/minecraft/world/entity/raid/Raider;Z)Z", at = @At("TAIL"))
     private void raidtracker$countWaveMember(int wave, Raider raider, boolean isRecruited, CallbackInfoReturnable<Boolean> cir) {
         raidtracker$wave.add(wave, raider.getUUID());
