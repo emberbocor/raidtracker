@@ -20,7 +20,7 @@ public final class RaidBossBar {
         if (format.isEmpty()) {
             return null;
         }
-        int waves = raid.getRaidOmenLevel() > 1 ? normalWaves + 1 : normalWaves;
+        int waves = raid.getBadOmenLevel() > 1 ? normalWaves + 1 : normalWaves;
         return Component.literal(format
                 .replace("{wave}", Integer.toString(raid.getGroupsSpawned()))
                 .replace("{waves}", Integer.toString(waves))

@@ -21,7 +21,7 @@ final class ServerConfigFile {
 
             # Boss bar text while a wave is running.
             # Placeholders: {wave} = the current wave, {waves} = the total number of waves (including the bonus wave
-            # of Raid Omen II and higher), {raiders} = the raiders left alive.
+            # of Bad Omen II and higher), {raiders} = the raiders left alive.
             # "" keeps the vanilla text.
             bossBarFormat = "Raid - Wave {wave}/{waves} - {raiders} raiders left"
 

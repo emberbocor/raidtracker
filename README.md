@@ -6,11 +6,11 @@ Raid Tracker puts the raid's progress on its boss bar: which wave is running, ho
 
 The mod runs on the server only. Players join with a plain vanilla client and still see everything.
 
-Available for NeoForge, Forge and Fabric.
+Available for Forge (also runs on NeoForge 1.20.1) and Fabric.
 
 ## Features
 
-- **Wave counter.** While a wave is running the boss bar reads `Raid - Wave 2/5 - 7 raiders left`. The total counts the bonus wave of Raid Omen II and higher, also when a second Raid Omen raises the level in the middle of a raid.
+- **Wave counter.** While a wave is running the boss bar reads `Raid - Wave 2/5 - 7 raiders left`. The total counts the bonus wave of Bad Omen II and higher, also when a second Bad Omen raises the level in the middle of a raid.
 - **Between waves.** After a wave is cleared the bar reads `Raid - Wave 2/5 cleared` until the next wave arrives (after the last wave: until the victory text).
 - **Live count.** The number of raiders left drops the moment a raider dies or leaves the raid, and rises when a raider joins.
 - **Vanilla where it matters.** Before the first wave arrives, and once the raid is won or lost, the bar keeps the vanilla text ("Raid", "Raid - Victory", "Raid - Defeat").
@@ -18,7 +18,7 @@ Available for NeoForge, Forge and Fabric.
 - **Every raid on its own.** Two raids in two villages each keep their own boss bar and count.
 - **Configurable.** Both texts and the glowing threshold can be changed or turned off in the server config.
 
-The number of waves is the vanilla one: 3 on Easy, 5 on Normal and 7 on Hard, plus one bonus wave with Raid Omen II or higher.
+The number of waves is the vanilla one: 3 on Easy, 5 on Normal and 7 on Hard, plus one bonus wave with Bad Omen II or higher.
 
 ## How the glowing works
 
@@ -28,23 +28,22 @@ Glowing from other sources, such as a bell or a spectral arrow, is left alone: t
 
 ## Requirements
 
-| | NeoForge | Forge | Fabric |
-|---|---|---|---|
-| Minecraft | 1.21.1 | 1.21.1 | 1.21 or 1.21.1 |
-| Loader | NeoForge 21.1.1 or newer | Forge 52.0.0 or newer | Fabric Loader 0.15.11 or newer |
-| Other | | | Fabric API 0.102.0 or newer |
-| Jar | `raidtracker-neoforge-1.21.1-<version>.jar` | `raidtracker-forge-1.21.1-<version>.jar` | `raidtracker-fabric-1.21-1.21.1-<version>.jar` |
+| | Forge / NeoForge | Fabric |
+|---|---|---|
+| Minecraft | 1.20.1 | 1.20 or 1.20.1 |
+| Loader | Forge 47.1.0 or newer, or NeoForge 1.20.1 (47.1.x) | Fabric Loader 0.14.21 or newer |
+| Other | | Fabric API 0.83.0 or newer |
+| Jar | `raidtracker-forge-1.20.1-<version>.jar` | `raidtracker-fabric-1.20-1.20.1-<version>.jar` |
 
-On Minecraft 1.21.1, NeoForge and Forge are separate loaders that do not run each other's mods, so each has its own jar. Pick the jar that matches your server's loader.
+On Minecraft 1.20.1, NeoForge still runs Forge mods, so the Forge jar is used for both.
 
-The Fabric jar bundles [NightConfig](https://github.com/TheElectronWill/night-config) (core and toml, LGPL-3.0) to read the TOML config. NeoForge and Forge already ship it.
+The Fabric jar bundles [NightConfig](https://github.com/TheElectronWill/night-config) 3.6.4 (core and toml, LGPL-3.0) to read the TOML config. Forge and NeoForge already ship it.
 
 ### Client and server
 
 Install the mod on the server only, on every loader. It adds no items, blocks, entities, effects, network messages or registries, so the server has nothing a client needs to know about:
 
-- **NeoForge:** vanilla clients and NeoForge clients without the mod can join.
-- **Forge:** vanilla clients and Forge clients without the mod can join. The mod is marked as server-only, so a Forge client without it still shows the server as compatible in the server list.
+- **Forge and NeoForge:** vanilla clients and Forge or NeoForge clients without the mod can join. The mod is marked as server-only, so a client without it still shows the server as compatible in the server list.
 - **Fabric:** vanilla clients and Fabric clients without the mod can join. Fabric API is only needed on the server.
 
 Players without the mod see the boss bar text and the glowing like everyone else. Installing it on a client as well does no harm.
@@ -92,6 +91,8 @@ glowAtRemainingPercent = 0
 
 Mistakes do not crash the server. An invalid value (a number where text is expected, a percentage outside 0-100 or with decimals) is replaced by its default with a warning in the log; unknown options are reported and ignored. If the file cannot be read at all (for example a TOML syntax error), the defaults are used, the file is left untouched and the log says why. The file is never rewritten once it exists, so your edits and comments stay.
 
+The config file is the same in every Minecraft version, so a file from the 1.21.1 version of the mod can be copied as it is.
+
 ## Removing the mod
 
 The world opens normally. Raids in progress continue with the vanilla boss bar, and raiders that were glowing stop glowing within a few seconds. The wave size saved with each raid uses its own `raidtracker:` keys, which vanilla ignores and drops on the next save. The config file stays in `config/` until you delete it.
@@ -107,7 +108,7 @@ The world opens normally. Raids in progress continue with the vanilla boss bar, 
 ./gradlew build
 ```
 
-The jars are written to `neoforge/build/libs/`, `forge/build/libs/` and `fabric/build/libs/`.
+The jars are written to `forge/build/libs/` and `fabric/build/libs/`.
 
 ## License
 
