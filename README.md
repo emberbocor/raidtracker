@@ -6,7 +6,7 @@ Raid Tracker puts the raid's progress on its boss bar: which wave is running, ho
 
 The mod runs on the server only. Players join with a plain vanilla client and still see everything.
 
-Currently available for NeoForge.
+Available for NeoForge, Forge and Fabric.
 
 ## Features
 
@@ -14,7 +14,7 @@ Currently available for NeoForge.
 - **Between waves.** After a wave is cleared the bar reads `Raid - Wave 2/5 cleared` until the next wave arrives (after the last wave: until the victory text).
 - **Live count.** The number of raiders left drops the moment a raider dies or leaves the raid, and rises when a raider joins.
 - **Vanilla where it matters.** Before the first wave arrives, and once the raid is won or lost, the bar keeps the vanilla text ("Raid", "Raid - Victory", "Raid - Defeat").
-- **Glowing stragglers.** When half of the current wave or less is left alive (rounded up: 3 of 5, 4 of 7), every remaining raider of that wave glows. Raiders that join during the wave, for example patrols recruited by the raid, count toward the wave.
+- **Glowing stragglers.** When half of the current wave or less is left alive (rounded up: 3 of 5, 4 of 7), every remaining raider of that wave glows. Raiders that join during the wave, for example patrols recruited by the raid, count toward the wave. The size of the wave is saved with the raid, so the threshold stays the same after the world is saved and loaded again.
 - **Every raid on its own.** Two raids in two villages each keep their own boss bar and count.
 - **Configurable.** Both texts and the glowing threshold can be changed or turned off in the server config.
 
@@ -28,15 +28,26 @@ Glowing from other sources, such as a bell or a spectral arrow, is left alone: t
 
 ## Requirements
 
-| | NeoForge |
-|---|---|
-| Minecraft | 1.21.1 |
-| Loader | NeoForge 21.1.1 or newer |
-| Jar | `raidtracker-neoforge-1.21.1-<version>.jar` |
+| | NeoForge | Forge | Fabric |
+|---|---|---|---|
+| Minecraft | 1.21.1 | 1.21.1 | 1.21 or 1.21.1 |
+| Loader | NeoForge 21.1.1 or newer | Forge 52.0.0 or newer | Fabric Loader 0.15.11 or newer |
+| Other | | | Fabric API 0.102.0 or newer |
+| Jar | `raidtracker-neoforge-1.21.1-<version>.jar` | `raidtracker-forge-1.21.1-<version>.jar` | `raidtracker-fabric-1.21-1.21.1-<version>.jar` |
+
+On Minecraft 1.21.1, NeoForge and Forge are separate loaders that do not run each other's mods, so each has its own jar. Pick the jar that matches your server's loader.
+
+The Fabric jar bundles [NightConfig](https://github.com/TheElectronWill/night-config) (core and toml, LGPL-3.0) to read the TOML config. NeoForge and Forge already ship it.
 
 ### Client and server
 
-Install the mod on the server only. It adds no items, blocks, entities, effects, network messages or registries, so players with a vanilla client (or a NeoForge client without the mod) can join and see the boss bar text and the glowing. Installing it on a client as well does no harm.
+Install the mod on the server only, on every loader. It adds no items, blocks, entities, effects, network messages or registries, so the server has nothing a client needs to know about:
+
+- **NeoForge:** vanilla clients and NeoForge clients without the mod can join.
+- **Forge:** vanilla clients and Forge clients without the mod can join. The mod is marked as server-only, so a Forge client without it still shows the server as compatible in the server list.
+- **Fabric:** vanilla clients and Fabric clients without the mod can join. Fabric API is only needed on the server.
+
+Players without the mod see the boss bar text and the glowing like everyone else. Installing it on a client as well does no harm.
 
 In singleplayer, install it in your own game; the built-in server runs it.
 
@@ -83,7 +94,7 @@ Mistakes do not crash the server. An invalid value (a number where text is expec
 
 ## Removing the mod
 
-The world opens normally. Raids in progress continue with the vanilla boss bar, and raiders that were glowing stop glowing within a few seconds. The mod keeps no data of its own in the world; only the config file stays in `config/`.
+The world opens normally. Raids in progress continue with the vanilla boss bar, and raiders that were glowing stop glowing within a few seconds. The wave size saved with each raid uses its own `raidtracker:` keys, which vanilla ignores and drops on the next save. The config file stays in `config/` until you delete it.
 
 ## Compatibility
 
@@ -96,8 +107,8 @@ The world opens normally. Raids in progress continue with the vanilla boss bar, 
 ./gradlew build
 ```
 
-The jar is written to `neoforge/build/libs/`.
+The jars are written to `neoforge/build/libs/`, `forge/build/libs/` and `fabric/build/libs/`.
 
 ## License
 
-MIT.
+MIT. The Fabric jar includes NightConfig, which is licensed under the LGPL-3.0.
