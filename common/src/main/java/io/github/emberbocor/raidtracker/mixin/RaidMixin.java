@@ -1,9 +1,5 @@
 package io.github.emberbocor.raidtracker.mixin;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,8 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import io.github.emberbocor.raidtracker.raid.RaidBossBar;
 import io.github.emberbocor.raidtracker.raid.RaidGlow;
+import io.github.emberbocor.raidtracker.raid.RaidWave;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 
@@ -39,10 +38,7 @@ public abstract class RaidMixin {
     private boolean raidtracker$customName;
 
     @Unique
-    private int raidtracker$countedWave = -1;
-
-    @Unique
-    private final Set<UUID> raidtracker$waveMembers = new HashSet<>();
+    private final RaidWave raidtracker$wave = new RaidWave();
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerBossEvent;setName(Lnet/minecraft/network/chat/Component;)V"))
     private Component raidtracker$replaceVanillaName(Component name) {
@@ -53,7 +49,7 @@ public abstract class RaidMixin {
     @Inject(method = "tick", at = @At("RETURN"))
     private void raidtracker$afterTick(CallbackInfo ci) {
         raidtracker$updateName();
-        RaidGlow.tick((Raid) (Object) this, raidtracker$waveMembers.size());
+        RaidGlow.tick((Raid) (Object) this, raidtracker$wave.size());
     }
 
     @Inject(method = "removeFromRaid", at = @At("TAIL"))
@@ -64,11 +60,17 @@ public abstract class RaidMixin {
     // Every raider of a wave passes through here: spawned ones, riders, recruits and raiders that rejoin after loading.
     @Inject(method = "addWaveMob(ILnet/minecraft/world/entity/raid/Raider;Z)Z", at = @At("TAIL"))
     private void raidtracker$countWaveMember(int wave, Raider raider, boolean isRecruited, CallbackInfoReturnable<Boolean> cir) {
-        if (wave > raidtracker$countedWave) {
-            raidtracker$countedWave = wave;
-            raidtracker$waveMembers.clear();
-        }
-        raidtracker$waveMembers.add(raider.getUUID());
+        raidtracker$wave.add(wave, raider.getUUID());
+    }
+
+    @Inject(method = "save", at = @At("TAIL"))
+    private void raidtracker$saveWave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+        raidtracker$wave.save(compound);
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
+    private void raidtracker$loadWave(ServerLevel level, CompoundTag compound, CallbackInfo ci) {
+        raidtracker$wave.load(compound);
     }
 
     @Unique
