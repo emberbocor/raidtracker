@@ -30,17 +30,17 @@ Glowing from other sources, such as a bell or a spectral arrow, is left alone: t
 
 | | NeoForge | Forge | Fabric |
 |---|---|---|---|
-| Minecraft | 26.1, 26.1.1 or 26.1.2 | 26.1, 26.1.1 or 26.1.2 | 26.1, 26.1.1 or 26.1.2 |
-| Loader | NeoForge 26.1.0.1-beta or newer | Forge 62.0.0 (26.1), 63.0.0 (26.1.1), 64.0.0 (26.1.2) or newer | Fabric Loader 0.18.4 or newer |
-| Other | | | Fabric API 0.144.0 or newer |
+| Minecraft | 26.2 | 26.2 | 26.2 |
+| Loader | NeoForge 26.2.0.0-beta or newer | Forge 65.0.0 or newer | Fabric Loader 0.18.4 or newer |
+| Other | | | Fabric API 0.152.1 or newer |
 | Java | 25 | 25 | 25 |
-| Jar | `raidtracker-neoforge-26.1-26.1.2-<version>.jar` | `raidtracker-forge-26.1-26.1.2-<version>.jar` | `raidtracker-fabric-26.1-26.1.2-<version>.jar` |
+| Jar | `raidtracker-neoforge-26.2-<version>.jar` | `raidtracker-forge-26.2-<version>.jar` | `raidtracker-fabric-26.2-<version>.jar` |
 
-The same jar works on 26.1, 26.1.1 and 26.1.2. NeoForge only has beta builds for 26.1 and 26.1.1; for 26.1.2 a stable build (26.1.2.71 or newer) is recommended.
+The first NeoForge builds for 26.2 are betas; a stable build (26.2.0.57 or newer) is recommended.
 
-Minecraft 26.1 needs Java 25, on the server and on the client.
+Minecraft 26.2 needs Java 25, on the server and on the client.
 
-On Minecraft 26.1, NeoForge and Forge are separate loaders that do not run each other's mods, so each has its own jar. Pick the jar that matches your server's loader.
+On Minecraft 26.2, NeoForge and Forge are separate loaders that do not run each other's mods, so each has its own jar. Pick the jar that matches your server's loader.
 
 The Fabric jar bundles [NightConfig](https://github.com/TheElectronWill/night-config) (core and toml, LGPL-3.0) to read the TOML config. NeoForge and Forge already ship it.
 
@@ -101,9 +101,9 @@ Mistakes do not crash the server. An invalid value (a number where text is expec
 
 The world opens normally. Raids in progress continue with the vanilla boss bar, and raiders that were glowing stop glowing within a few seconds. The wave size saved with each raid uses its own `raidtracker:` keys, which vanilla ignores and drops on the next save. The config file stays in `config/` until you delete it.
 
-## Upgrading a world from 1.21.11
+## Upgrading a world from 26.1
 
-Raids that are running when a 1.21.11 world is opened in 26.1 keep their wave size, so the glowing threshold stays the same.
+Raids that are running when a 26.1 world is opened in 26.2 keep their wave size, so the glowing threshold stays the same.
 
 ## Compatibility
 
