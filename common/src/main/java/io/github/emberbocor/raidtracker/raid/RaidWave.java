@@ -4,17 +4,41 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.entity.raid.Raid;
 
 public final class RaidWave {
-    private static final String WAVE = "raidtracker:Wave";
-    private static final String MEMBERS = "raidtracker:WaveMembers";
+    // Same keys and format as the NBT of the 1.21.1 version, so raids saved there keep their wave size.
+    private static final MapCodec<RaidWave> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.INT.lenientOptionalFieldOf("raidtracker:Wave", -1).forGetter(wave -> wave.wave),
+            UUIDUtil.CODEC_SET.lenientOptionalFieldOf("raidtracker:WaveMembers", Set.of()).forGetter(wave -> wave.members)
+    ).apply(instance, RaidWave::new));
 
-    private final Set<UUID> members = new HashSet<>();
-    private int wave = -1;
+    private final Set<UUID> members;
+    private int wave;
+
+    public RaidWave() {
+        this(-1, Set.of());
+    }
+
+    private RaidWave(int wave, Set<UUID> members) {
+        this.wave = wave;
+        this.members = new HashSet<>(members);
+    }
+
+    public static MapCodec<Raid> withWave(MapCodec<Raid> raidCodec) {
+        return Codec.mapPair(raidCodec, MAP_CODEC).xmap(
+                pair -> {
+                    ((RaidWaveHolder) pair.getFirst()).raidtracker$setWave(pair.getSecond());
+                    return pair.getFirst();
+                },
+                raid -> Pair.of(raid, ((RaidWaveHolder) raid).raidtracker$getWave()));
+    }
 
     public void add(int wave, UUID member) {
         if (wave > this.wave) {
@@ -26,27 +50,5 @@ public final class RaidWave {
 
     public int size() {
         return members.size();
-    }
-
-    public void save(CompoundTag compound) {
-        if (members.isEmpty()) {
-            return;
-        }
-        ListTag list = new ListTag();
-        for (UUID member : members) {
-            list.add(NbtUtils.createUUID(member));
-        }
-        compound.putInt(WAVE, wave);
-        compound.put(MEMBERS, list);
-    }
-
-    public void load(CompoundTag compound) {
-        if (!compound.contains(WAVE, Tag.TAG_INT) || !compound.contains(MEMBERS, Tag.TAG_LIST)) {
-            return;
-        }
-        wave = compound.getInt(WAVE);
-        for (Tag member : compound.getList(MEMBERS, Tag.TAG_INT_ARRAY)) {
-            members.add(NbtUtils.loadUUID(member));
-        }
     }
 }
